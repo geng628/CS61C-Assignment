@@ -1,7 +1,8 @@
-1.
-2.
-3.
-4.
-5.
-6.
-7.
+1.clean:
+	-rm -rf core *.o *~ "#"*"#" Makefile.bak $(BINARIES) *.dSYM
+2.all
+3.gcc
+4.std = c99
+5.标准引用: 使用 $() 或 ${} 包裹变量名，例如：$(CC)
+6.苹果系统
+7.31
