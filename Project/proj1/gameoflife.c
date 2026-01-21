@@ -22,14 +22,67 @@
 //and the left column as adjacent to the right column.
 Color *evaluateOneCell(Image *image, int row, int col, uint32_t rule)
 {
-	//YOUR CODE HERE
+	//YOUR CODE HERE//每一个颜色单独处理,就是给你一个单独的细胞
+	int rows = image->rows;
+	int cols = image->cols;
+	int alive_neighbors = 0;
+	int neighbors[8][2] = {
+		// 这里面存的相当于八个邻居里面的坐标
+		{(row - 1 + rows) % rows, (col - 1 + cols) % cols}, // 左上
+		{(row - 1 + rows) % rows, col},						// 上
+		{(row - 1 + rows) % rows, (col + 1) % cols},		// 右上
+		{row, (col - 1 + cols) % cols},						// 左
+		{row, (col + 1) % cols},							// 右
+		{(row + 1) % rows, (col - 1 + cols) % cols},		// 左下
+		{(row + 1) % rows, col},							// 下
+		{(row + 1) % rows, (col + 1) % cols}				// 右下
+	};
+	for (int i = 0; i < 8;++i){
+		int neighbor_row = neighbors[i][0];
+		int neighbor_col = neighbors[i][1];
+		if(image->image[neighbor_row][neighbor_col].R == 255){
+			alive_neighbors++;
+		}
+	}
+	int current_state = (image->image[row][col].R == 255) ? 1 : 0;
+	int new_state = (rule >> (current_state * 9 + alive_neighbors)) & 1;//如果当前的细胞是活的，就加上偏移量
+	Color *new_color = (Color *)malloc(sizeof(Color));
+	if(new_state == 1){
+		new_color->R = 255;
+		new_color->G = 255;
+		new_color->B = 255;
+	}else{
+		new_color->R = 0;
+		new_color->G = 0;
+		new_color->B = 0;
+	}
+	return new_color;
 }
 
 //The main body of Life; given an image and a rule, computes one iteration of the Game of Life.
 //You should be able to copy most of this from steganography.c
 Image *life(Image *image, uint32_t rule)
 {
-	//YOUR CODE HERE
+	// YOUR CODE HERE
+	Image *new_image = (Image *)malloc(sizeof(Image));
+	new_image->rows = image->rows;
+	new_image->cols = image->cols;
+	new_image->image = (Color **)malloc(sizeof(Color *) * image->rows);
+	for (int i = 0; i < new_image->rows; ++i)
+	{
+		new_image->image[i] = (Color *)malloc(sizeof(Color) * new_image->cols);
+	}
+	for (uint32_t i = 0; i < image->rows; i++)
+	{
+		for (uint32_t j = 0; j < image->cols; ++j)
+		{
+			Color *temp = evaluateOneCell(image, i, j,rule);
+			// 值传递
+			new_image->image[i][j] = *temp;
+			free(temp);
+		}
+	}
+	return new_image;
 }
 
 /*
@@ -50,4 +103,24 @@ You may find it useful to copy the code from steganography.c, to start.
 int main(int argc, char **argv)
 {
 	//YOUR CODE HERE
+	if (argc <= 2)
+	{
+		printf("usage: ./gameOfLife filename rule\nfilename is an ASCII PPM file (type P3) with maximum value 255.\nrule is a hex number beginning with 0x; Life is 0x1808.\n");
+		return -1;
+	}
+	char *rule_str = argv[2];
+
+	char *endptr;
+	uint32_t rule = strtol(rule_str, &endptr, 16);
+	if (*endptr != '\0' || rule < 0x00000 || rule > 0x3FFFF)
+	{
+		printf("Invalid rule. Rule should be a hex number between 0x00000 and 0x3FFFF.\n");
+		return -1;
+	}
+
+	Image *picture = readData(argv[1]);
+	Image *new_picture = life(picture, rule);
+	writeData(new_picture);
+	freeImage(picture);
+	freeImage(new_picture);
 }
