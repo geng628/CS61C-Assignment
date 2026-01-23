@@ -4,10 +4,10 @@ n: .word 9
 
 .text
 main:
-    add t0, x0, x0
+    add t0, x0, x0,
     addi t1, x0, 1
-    la t3, n
-    lw t3, 0(t3)
+    la t3, n #这里是把n的地址加载到t3上了
+    lw t3, 0(t3) 
 fib:
     beq t3, x0, finish
     add t2, t1, t0
