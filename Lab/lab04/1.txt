@@ -1,0 +1,2 @@
+/home/crane/cs61c/CS61C-Assignment/Lab/tools/venus.jar
+java -jar /home/crane/cs61c/CS61C-Assignment/Lab/tools/venus.jar megalistmanips.s -cc

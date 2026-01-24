@@ -77,7 +77,7 @@ main:
 # Think: why might having a1 be useful?
 f:
     # YOUR CODE GOES HERE!
-
+    
     jr ra               # Always remember to jr ra after your function!
 
 print_int:
