@@ -14,21 +14,40 @@
 # - If the length of the vector is less than 1,
 #   this function terminates the program with error code 77.
 # =================================================================
-argmax:
+argmax: 
 
+    li t5 1
+    blt a1, t5, Exception
     # Prologue
+    addi sp,sp,-8
+    sw s0,0(sp)
+    sw s1,4(sp)
 
-
+    mv s0,a0
+    mv s1,a1
+    add t0, x0, s0     
+    add t1, zero,zero
+    li t4, 1
+    sub t3 ,zero,t4    #min
 loop_start:
-
-
+    beq t1, s1, loop_end
+    lw t2, 0(t0)
+    bge t3, t2, loop_continue
+    mv t3, t2
 loop_continue:
-
-
+    addi t1, t1, 1
+    addi t0, t0, 4
+    j loop_start
 loop_end:
-    
+    mv a0, t3
 
+    lw s0,0(sp)
+    lw s1,4(sp)
+    addi sp,sp,8
     # Epilogue
 
 
     ret
+Exception:
+    li a1, 77
+    jal exit2
