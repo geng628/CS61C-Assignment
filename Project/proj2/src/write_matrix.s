@@ -23,18 +23,71 @@
 #   this function terminates the program with error code 95.
 # ==============================================================================
 write_matrix:
+    addi sp,sp, -24
+    sw s0,0(sp)
+    sw s1,4(sp)
+    sw s2,8(sp)
+    sw s3,12(sp)
+    sw ra,16(sp)
+    sw s4,20(sp)
 
+    mv s0,a0
+    mv s1,a1
+    mv s2,a2
+    mv s3,a3
     # Prologue
+    #=================
+    #fopen
+    #=================
+    mv a1, s0
+    li a2, 1
+    jal ra,fopen
+    mv s4, a0          # s4 is file descriptor
 
+    #=================
+    #fwrite  row
+    #=================
+    mv a1,s4
+    addi sp,sp,-4
+    sw s2, 0(sp)
+    mv a2, sp
+    addi sp,sp,4
+    li a3, 1
+    li a4, 4
+    jal ra,fwrite
 
+    #=================
+    #fwrite  columns
+    #=================
+    mv a1, s4
+    addi sp,sp,-4
+    sw s3,0(sp)
+    mv a2, sp
+    addi sp,sp,4
+    li a3, 1
+    li a4, 4
+    jal ra,fwrite
 
-
-
-
-
-
-
+    #=================
+    #fwrite  matrix
+    #=================
+    mv a1,s4
+    mv a2,s1
+    mul t0, s2, s3
+    mv a3, t0
+    li a4, 4
+    jal fwrite
+    #=================
+    #fclose
+    #=================
+    mv a1, s4
+    jal fclose
     # Epilogue
-
-
+    lw s0,0(sp)
+    lw s1,4(sp)
+    lw s2,8(sp)
+    lw s3,12(sp)
+    lw s4,16(sp)
+    lw ra,20(sp)
+    addi sp,sp,24
     ret
