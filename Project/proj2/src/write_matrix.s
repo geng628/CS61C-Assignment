@@ -39,55 +39,103 @@ write_matrix:
     #=================
     #fopen
     #=================
+    addi sp,sp,-12
+    sw a0,0(sp)
+    sw a1,4(sp)
+    sw a2,8(sp)
     mv a1, s0
     li a2, 1
     jal ra,fopen
-    mv s4, a0          # s4 is file descriptor
-
+    mv s4, a0         
+    lw a0,0(sp)
+    lw a1,4(sp)
+    lw a2,8(sp)
+    addi sp,sp,12
     #=================
-    #fwrite  row
+    #fwrite_row
     #=================
+    addi sp,sp,-20
+    sw a1,0(sp)
+    sw a2,4(sp)
+    sw a3,8(sp)
+    sw a4,12(sp)
+    sw a0,16(sp)
     mv a1,s4
     addi sp,sp,-4
     sw s2, 0(sp)
     mv a2, sp
-    addi sp,sp,4
+    
     li a3, 1
     li a4, 4
     jal ra,fwrite
-
+    addi sp,sp, 4
+    lw a1,0(sp)
+    lw a2,4(sp)
+    lw a3,8(sp)
+    lw a4,12(sp)
+    lw a0,16(sp)
+    addi sp,sp,20
     #=================
-    #fwrite  columns
+    #fwrite_columns
     #=================
+    addi sp,sp,-20
+    sw a1,0(sp)
+    sw a2,4(sp)
+    sw a3,8(sp)
+    sw a4,12(sp)
+    sw a0,16(sp)
     mv a1, s4
     addi sp,sp,-4
     sw s3,0(sp)
     mv a2, sp
-    addi sp,sp,4
     li a3, 1
     li a4, 4
     jal ra,fwrite
-
+    addi sp,sp,4
+    lw a1,0(sp)
+    lw a2,4(sp)
+    lw a3,8(sp)
+    lw a4,12(sp)
+    lw a0,16(sp)
+    addi sp,sp,20
     #=================
-    #fwrite  matrix
+    #fwrite_matrix
     #=================
+    addi sp,sp,-20
+    sw a1,0(sp)
+    sw a2,4(sp)
+    sw a3,8(sp)
+    sw a4,12(sp)
+    sw a0,16(sp)
     mv a1,s4
     mv a2,s1
-    mul t0, s2, s3
-    mv a3, t0
+    mul a3, s2, s3
     li a4, 4
-    jal fwrite
+    jal ra,fwrite
+    lw a1,0(sp)
+    lw a2,4(sp)
+    lw a3,8(sp)
+    lw a4,12(sp)
+    lw a0,16(sp)
+    addi sp,sp,20
     #=================
     #fclose
     #=================
+    addi sp,sp,-8
+    sw a1,0(sp)
+    sw a0,4(sp)
+
     mv a1, s4
-    jal fclose
+    jal ra,fclose
+    lw a1,0(sp)
+    lw a0,4(sp)
+    addi sp,sp,8
     # Epilogue
     lw s0,0(sp)
     lw s1,4(sp)
     lw s2,8(sp)
     lw s3,12(sp)
-    lw s4,16(sp)
-    lw ra,20(sp)
+    lw ra,16(sp)
+    lw s4,20(sp)
     addi sp,sp,24
     ret
