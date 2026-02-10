@@ -1,6 +1,6 @@
-1.
-2.
-
+1.jki and kji Because in the innermost iteration, it moves through B with stride 0 and moves through A and C with stride 1.
+2.ikj and kij Because in the innermost iteration, it moves through B and C with stride n.
+3.We stride through the matrices with respect to the innermost loop continuous can reduce the time to multiply the matrices.   要保证内部循环的连续性
 --- lines below are ignored by the AG ---
 
 Checkoff Question 1:

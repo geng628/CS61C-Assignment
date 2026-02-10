@@ -1,20 +1,19 @@
 Scenario 1
     1.
-    2.
-    3.
+    2.0 because the index portion is always 00, and the address we access is always mapped to the first set.However the tag portion is always different, so the first cache line is always evicted so that the hit rate will always be zero.
+    3. stepsize = 1
 
 Scenario 2
-    1.
-    2.
-    3.
+    1.2
+    2.One miss followed by three hit. Because every four accesses will increase index portion by one which lead one miss, and the next there accesses will not change the flag and index portion.
+    3.When Rep Count goes to infinity, the hit rate will be very closed to 100%. Because all data in array has been cached.
 
 Scenario 3
-    1.
-    2.
-    3.
-    4.
-    5.
-
+    1.  0.5 0  0.5  
+    2.  We have 32 accesses to L1 cache total. 16 of them misses
+    3.  16 L1 miss 16 times so that access L2 16 times
+    4. We can increase Rep Count to increase our L2 hit rate.Because the first iteration cache all the data to L2 cache, so L2 hit rate has increased. However the tag portion changed in L1 cache and the data are not cached, so our L1 hit rate will not change. 
+    5.When we increase the number of blocks in L1, the hit rates for L1 and L2 will not change. When We increase the L1 block size, the hit rate for L1 will increase and for L2 will not change
 --- lines below are ignored by the AG ---
 
 Checkoff Question 1:
